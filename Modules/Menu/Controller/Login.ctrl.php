@@ -11,6 +11,7 @@ class LoginController extends Controller
 
         $this->model = new LoginModel();
         $this->view = new LoginView();
+
     }
 
     public function telaLogin()

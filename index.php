@@ -1,12 +1,11 @@
 <?php
+
 session_start();
+
 require_once 'Smarty/libs/Smarty.class.php';
 require_once 'Classes/Controller.cls.php';
-require_once 'Classes/Model.cls.php';
+require_once 'Classes/Dao.cls.php';
 require_once 'Classes/View.cls.php';
-require_once 'Model/Login.mdl.php';
-require_once 'View/Login.vw.php';
-require_once 'Controller/Login.ctrl.php';
 
 	if (!$_REQUEST['module'])
 	{
@@ -14,10 +13,16 @@ require_once 'Controller/Login.ctrl.php';
 	}else
 	{
 		$module =$_REQUEST['module'];
+
 	};
 	
+require_once 'Modules/'.$module.'/Controller/'.$module.'.ctrl.php';
+require_once 'Modules/'.$module.'/Model/'.$module.'.mdl.php';
+require_once 'Modules/'.$module.'/View/'.$module.'.vw.php';
+
 	eval('$obj = new '.$module.'Controller();');
-	if (!$_REQUEST['action'])
+
+	if (!isset($_REQUEST['action']))
 	{
 		$action = 'acaoPadrao';
 	}
@@ -25,5 +30,6 @@ require_once 'Controller/Login.ctrl.php';
 	{
 		$action =$_REQUEST['action'];
 	};
+
 	eval('$obj->'.$action.'();');
 ?>

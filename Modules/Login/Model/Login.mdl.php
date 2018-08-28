@@ -1,14 +1,17 @@
 <?php
-class Login extends Dao
+/**
+ * @table=login
+ */
+
+class LoginModel extends Dao 
 {
-    /*
+    /**
      * @PK
      */
-	public $id;
-	
-    public $login;
+    public $id;
+	public $usuario;
 	public $senha;
-	
+
 	public function criar($usuario,$senha)
 	{
 		$sql ="insert into logins (login,senha) values ('$usuario','$senha')";
@@ -27,20 +30,9 @@ class Login extends Dao
 		return $this->query($sql);		
 	}
 	
-	public function listar($criteria=null)
-	{
-		$sql ="Select * from logins ";
-		if ($criteria != null)
-		{
-			$sql .= "Where $criteria";
-		}
-		return $this->query($sql);				
-	}
-	
 	public function verificarSenhaUsuario($usuario,$senha){
-		
-		$criteria = "login = '".$usuario."' and senha = '".$senha."'";
 
+		$criteria = "login = '".$usuario."' and senha = '".$senha."'";
 		$lista =$this->listar($criteria);
 		
 		if (count($lista)== 1)
@@ -52,8 +44,6 @@ class Login extends Dao
 			return false;
 		} 
 	}
-	
-
 }
 	
 	

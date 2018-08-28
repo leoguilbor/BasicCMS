@@ -1,17 +1,17 @@
 <?php
-/*
+/**
  * @table=login
  */
 
-class LoginModel extends Dao
+class LoginModel extends Dao 
 {
-    /*
+    /**
      * @PK
      */
     public $id;
 	public $usuario;
 	public $senha;
-	
+
 	public function criar($usuario,$senha)
 	{
 		$sql ="insert into logins (login,senha) values ('$usuario','$senha')";
@@ -44,8 +44,6 @@ class LoginModel extends Dao
 			return false;
 		} 
 	}
-	
-
 }
 	
 	

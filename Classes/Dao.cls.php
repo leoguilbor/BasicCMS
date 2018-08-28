@@ -1,22 +1,121 @@
 <?php
 class Dao
 {
+    private  $__TABLENAME;
+    private $__PK = array();
+    private $__COLUMNS = array();
     
     public function __construct()
     {
+      
         $this->connect();
-        $reflection = ReflectionClass(get_class($this));
-        $doc = $reflection->getDocComent();
-        
+        $reflection = new ReflectionClass(get_class($this));
+        $doc = $reflection->getDocComment();
+
+
         $tags = array();
-        $pattern = '/@[w]+[ ]{0,1}=[ ]{0,1}[w]+/';
-        $pk= array();
-        
-        if (preg_match_all( $doc, $comment, $tags )==1){
-            //ainda por terminar esquema de annotation para pegar nome da tabela
+        $pattern = '/@[table]+[ ]{0,1}=[ ]{0,1}[A-Za-z]+/';
+        //get the table name
+        if (preg_match_all($pattern, $doc , $tags )!=0){
+           
+            $this->setTableName(preg_replace('/@[table]+[ ]{0,1}=[ ]{0,1}/', '', $tags[0][0]));
+               
+
         }
+
+        // get the PK and the name of the columns 
+        foreach ($reflection->getProperties() as $column){
+            
+            $comment =  $column->getDocComment();
+
+            $pattern = '/@[PK]+|@[column]+[ ]{0,1}=[ ]{0,1}[A-Za-z]+/';
+            $hasColumnTag =false;
+
+            if (preg_match_all( $pattern, $comment, $tags )>=1){         
+                foreach ($tags as $tag){
+ 
+                    if ($tag[0] == '@PK'){
+
+                        $this->__PK[$column->name] = $column->name;
+
+                    }
+                    else {
+
+                        $hasColumnTag =true;
+
+                        $this->setColumns($column->name, preg_replace('/@[column]+[ ]{0,1}=[ ]{0,1}/', '', $tag[0]));
+
+                        if (isset($__PK[$column->name])){
+
+                            $this->__PK[$column->name] = $this->__COLUMNS[$column->name];
+
+                        }
+                    }
+                }
+            }
+            if (!$hasColumnTag){
+        
+                $this->__COLUMNS[$column->name] = $column->name;
+                
+                
+            }
+            $hasColumnTag = false;
+            
+        }
+
+    }
+    public function getTableName(){
+        return $this->__TABLENAME;
+    }
+    public function getPk(){
+        return $this->__PK;
+    }
+    public function getColumns(){
+        return $this->__COLUMNS;
+    }
+    public function getColumnsAsString(){
+        $string ='';
+        foreach( $this->getColumns() as $column){
+            
+            $string .=$column;
+            if ($column!= array_values($this->getColumns())[count($this->getColumns())-1]){
+                $string.=',';
+            }
+            
+        }
+        return $string;
         
     }
+    
+    public function setTableName($value){
+        
+        $this->__TABLENAME = $value;
+    }
+    public function setPk($key=null,$value){
+        $this->__PK[$key] = $value;
+    }
+    public function setColumns($key=null,$value){
+        $this->__COLUMNS[$key] = $value;
+    }
+    public function getValues(){
+        $string ='';
+        $value='';
+        foreach( $this->getColumns() as $column){
+            
+            eval ('isset($this->'.$column.')?$value = $this->'.$column.': $value= \'NULL\';');
+            
+            if(is_string($value) && $value != 'NULL') {
+                $value = "'$value'";
+            }
+            $string .=$value;
+            if ($column!= array_values($this->getColumns())[count($this->getColumns())-1]){
+                $string.=',';
+            }
+        }
+        return $string;
+        
+    } 
+    
     public function getConn()
     {
         return $this->conn;
@@ -47,7 +146,17 @@ class Dao
         }
         $this->selecionarBanco();
     }
-    
+    public function selecionarBanco(){
+        switch ($this->dbConfig->tipoDB){
+            case 'postgres':{
+                break;
+            }
+            case 'mysql':{
+                mysqli_select_db($this->dbConfig->db,$this->conn) or die ("sem conexao com o banco");
+                break;
+            }
+        }
+    }
     public function query($query){
 
         switch ($this->dbConfig->driver){
@@ -72,9 +181,9 @@ class Dao
 
                     if ($rs=mysqli_query($this->conn,$query))
                     {
-                        
-                        while($row = mysqli_fetch_array($rs,MYSQL_ASSOC))
+                        foreach(mysqli_fetch_all($rs) as $row )
                         {
+
                             $lista[$i]=$row;
                             $i= $i +1;
                         }
@@ -90,52 +199,12 @@ class Dao
         }
     }
     
-    public function selecionarBanco(){
-        switch ($this->dbConfig->tipoDB){
-            case 'postgres':{
-                break;
-            }
-            case 'mysql':{
-                mysqli_select_db($this->dbConfig->db,$this->conn) or die ("sem conexao com o banco");
-                break;
-            }
-        }
-    }
-    public function values(){
-        return json_encode(get_object_vars($this));
-    }
-    
-    public function getPkFields(){
-        $reflection = ReflectionClass(get_class($this));
-       
-        foreach (get_class_vars($this) as $field){
-            $prop = ReflectionProperty($reflection,$field);
-            $comment = $prop->getDocComment();
-            
 
-            $tags = array();
-            $pattern = '/@PK/';
-            $pk= array();
-            if (preg_match_all( $pattern, $comment, $tags )==1){
-                switch ($this->dbConfig->tipoDB){
-                    case 'postgres':{
-                        $pk[]=$field;
-                        break;
-                    }
-                    case 'mysql':{
-                        $pk[]=$field;
-                        break;
-                    }
-                }
-            }
-        }
 
-        return $pk;
-    }
     
     public function create($model)
     {
-        $sql ="insert into ".get_class($this)." (".get_class_vars($this)." ) values (".array_values(json_decode($model->values,true)).")";
+        $sql ="insert into ". $this->getTableName() ." (".$this->getColumnsAsString()." ) values (".$this->getValues().");";
         return $this->query($sql);
     }
     
@@ -196,10 +265,10 @@ class Dao
     
     public function listar($criteria=null)
     {
-        $sql ="Select * from ".get_class($this)." ";
+        $sql ="Select * from ". $this->getTableName();
         if ($criteria != null)
         {
-            $sql .= "Where ";
+            $sql .= " Where ";
             if (get_class($this) == (get_class($ids))){
                 
                 foreach($array_pk as $field){

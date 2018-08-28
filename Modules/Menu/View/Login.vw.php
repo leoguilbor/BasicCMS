@@ -13,7 +13,7 @@ class LoginView extends View
 			$this->atribuirValor('name',$logged_who);
 		}	
 
-    	$this->mostrarNaTela('Modules/Login/Template/login.html');
+    	$this->mostrarNaTela('Template/index.html');
 
     }
     
@@ -22,24 +22,21 @@ class LoginView extends View
         $this->atribuirValor('nome','Leoguilbor');
         $this->atribuirValor('titulo','Aplicacao teste');
         $this->atribuirValor('erro', 'Login Invalido');
-        $this->mostrarNaTela('Module/Login/Template/erro.html');
+        $this->mostrarNaTela('Template/index.html');
 
     }
 
     public function exibirTelaLogado()
     {
 
-        
-        $this->atribuirValor('nome','Viviane Jordao');
-        $this->atribuirValor('titulo','Fotografia');
-        
-        if (isset($_SESSION["logged_in"]))
-        {
-            $this->atribuirValor('logged_in',$logged_in);
-            $this->atribuirValor('name',$logged_who);
-        }
-        
-        $this->mostrarNaTela('Modules/Login/Template/logado.html');
+        $this->atribuirValor('nome','Leoguilbor');
+		$this->atribuirValor('titulo','Aplicacao teste');
+		if (isset($_SESSION["logged_in"]))
+		{
+			$this->atribuirValor('logged_in',$_SESSION["logged_in"]);
+			$this->atribuirValor('name',$_SESSION["logged_who"]);
+		}	
+        $this->mostrarNaTela('Template/index.html');
     }
 	
 }

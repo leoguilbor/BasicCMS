@@ -7,7 +7,7 @@
       <xs:element name="user" type="xs:string"/>
       <xs:element name="password" type="xs:string"/>
       <xs:element name="db" type="xs:string"/>
-      <xs:element name="tipoDB" type="xs:string"/>	  
+      <xs:element name="driver" type="xs:string"/>	  
     </xs:sequence>
   </xs:complexType>
 </xs:element>
