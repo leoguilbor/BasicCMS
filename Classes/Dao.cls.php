@@ -6,34 +6,27 @@ class Dao
     private $__COLUMNS = array();
     
     public function __construct()
-    {
+    {       
       
         $this->connect();
         $reflection = new ReflectionClass(get_class($this));
         $doc = $reflection->getDocComment();
-
-
         $tags = array();
         $pattern = '/@[table]+[ ]{0,1}=[ ]{0,1}[A-Za-z]+/';
         //get the table name
         if (preg_match_all($pattern, $doc , $tags )!=0){
-           
             $this->setTableName(preg_replace('/@[table]+[ ]{0,1}=[ ]{0,1}/', '', $tags[0][0]));
-               
-
         }
 
         // get the PK and the name of the columns 
-        foreach ($reflection->getProperties() as $column){
-            
+        foreach ($reflection->getProperties() as $column){   
             $comment =  $column->getDocComment();
-
             $pattern = '/@[PK]+|@[column]+[ ]{0,1}=[ ]{0,1}[A-Za-z]+/';
             $hasColumnTag =false;
 
             if (preg_match_all( $pattern, $comment, $tags )>=1){         
                 foreach ($tags as $tag){
- 
+
                     if ($tag[0] == '@PK'){
 
                         $this->__PK[$column->name] = $column->name;
@@ -43,21 +36,22 @@ class Dao
 
                         $hasColumnTag =true;
 
-                        $this->setColumns($column->name, preg_replace('/@[column]+[ ]{0,1}=[ ]{0,1}/', '', $tag[0]));
-
+                        $this->__COLUMNS[$column->name]= preg_replace('/@[column]+[ ]{0,1}=[ ]{0,1}/', '', $tag[0]);
+          
                         if (isset($__PK[$column->name])){
 
                             $this->__PK[$column->name] = $this->__COLUMNS[$column->name];
 
                         }
+                        
                     }
                 }
+                
             }
             if (!$hasColumnTag){
-        
+      
                 $this->__COLUMNS[$column->name] = $column->name;
-                
-                
+                          
             }
             $hasColumnTag = false;
             
@@ -74,8 +68,9 @@ class Dao
         return $this->__COLUMNS;
     }
     public function getColumnsAsString(){
+        
         $string ='';
-        foreach( $this->getColumns() as $column){
+        foreach( $this->__COLUMNS as $column){
             
             $string .=$column;
             if ($column!= array_values($this->getColumns())[count($this->getColumns())-1]){
@@ -97,6 +92,17 @@ class Dao
     public function setColumns($key=null,$value){
         $this->__COLUMNS[$key] = $value;
     }
+    public function setThis($value){
+  
+        foreach( $this->getColumns() as $column){
+            
+            eval ('$this->'.$column.' = $value[\''.$column.'\'];');
+            
+        }
+        
+    }
+    
+    
     public function getValues(){
         $string ='';
         $value='';
@@ -181,18 +187,20 @@ class Dao
 
                     if ($rs=mysqli_query($this->conn,$query))
                     {
-                        foreach(mysqli_fetch_all($rs) as $row )
-                        {
 
+                        while ($row = mysqli_fetch_assoc($rs))
+                        {
+                            
                             $lista[$i]=$row;
                             $i= $i +1;
                         }
+
                     }else
                     {
 
                         echo mysqli_error($link);
                     }
-                    
+
                     return $lista;
                     break;
                 }
@@ -263,9 +271,9 @@ class Dao
         return $this->query($sql);
     }
     
-    public function listar($criteria=null)
+    public function list($criteria=null)
     {
-        $sql ="Select * from ". $this->getTableName();
+        $sql ="Select ". $this->getColumnsAsString() ." from ". $this->getTableName();
         if ($criteria != null)
         {
             $sql .= " Where ";

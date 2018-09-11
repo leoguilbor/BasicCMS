@@ -1,9 +1,9 @@
 <?php
 /**
- * @table=login
+ * @table=Main
  */
 
-class LoginModel extends Dao 
+class MainModel extends Dao 
 {
     /**
      * @PK

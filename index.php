@@ -6,10 +6,12 @@ require_once 'Smarty/libs/Smarty.class.php';
 require_once 'Classes/Controller.cls.php';
 require_once 'Classes/Dao.cls.php';
 require_once 'Classes/View.cls.php';
+require_once 'Classes/Business.cls.php';
+
 
 	if (!$_REQUEST['module'])
 	{
-		$module = 'Login';
+		$module = 'Main';
 	}else
 	{
 		$module =$_REQUEST['module'];
@@ -17,10 +19,8 @@ require_once 'Classes/View.cls.php';
 	};
 	
 require_once 'Modules/'.$module.'/Controller/'.$module.'.ctrl.php';
-require_once 'Modules/'.$module.'/Model/'.$module.'.mdl.php';
-require_once 'Modules/'.$module.'/View/'.$module.'.vw.php';
 
-	eval('$obj = new '.$module.'Controller();');
+    eval('$obj = new '.$module.'Controller();');
 
 	if (!isset($_REQUEST['action']))
 	{

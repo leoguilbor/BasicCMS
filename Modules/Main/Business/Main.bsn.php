@@ -1,0 +1,1 @@
+<?phpclass MainBusiness extends Business{        public function __construct()    {        $this->setDao(new MainModel());            }	public function getModules(){	    	    $module = new ModuleModel();	    return $module->list();	    	}}?>

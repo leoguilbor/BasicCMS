@@ -1,19 +1,11 @@
 <?php
-class LoginView extends View
+class FooterView extends View
 {
-    public function exibirTelaLogin()
+    public function exibirTelaPadrao($dao)
     {
-
-		$this->atribuirValor('nome','Viviane Jordao');
-		$this->atribuirValor('titulo','Fotografia');
-
-		if (isset($_SESSION["logged_in"]))
-		{
-			$this->atribuirValor('logged_in',$logged_in);
-			$this->atribuirValor('name',$logged_who);
-		}	
-
-    	$this->gerarHtml('Modules/Login/Template/index.html');
+        $this->atribuirValor('bootstrap','col-md-3');
+		$this->atribuirValor('header',$dao);
+		$this->gerarHtml('Modules/Footer/Template/index.html');
 
     }
     
@@ -22,7 +14,7 @@ class LoginView extends View
         $this->atribuirValor('nome','Leoguilbor');
         $this->atribuirValor('titulo','Aplicacao teste');
         $this->atribuirValor('erro', 'Login Invalido');
-        $this->mostrarNaTela('Module/Login/Template/erro.html');
+        $this->mostrarNoContainer('Module/Login/Template/erro.html');
 
     }
 

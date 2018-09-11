@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<banco xmlns="http://www.w3schools.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com configModule.xsd">
+	<host>localhost</host>
+	<user>root</user>
+	<password>g71lb0r*#%</password>
+	<db>phpFramework</db>
+	<driver>mysql</driver>
+</banco>

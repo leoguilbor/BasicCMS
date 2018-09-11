@@ -1,20 +1,12 @@
 <?php
-class LoginView extends View
+class MainView extends View
 {
-    public function exibirTelaLogin()
-    {
-
+    public function exibirTelaPrincipal($modules)
+    {      
 		$this->atribuirValor('nome','Viviane Jordao');
 		$this->atribuirValor('titulo','Fotografia');
-
-		if (isset($_SESSION["logged_in"]))
-		{
-			$this->atribuirValor('logged_in',$logged_in);
-			$this->atribuirValor('name',$logged_who);
-		}	
-
-    	$this->gerarHtml('Modules/Login/Template/index.html');
-
+		$this->atribuirValor('modules',self::$modules);
+    	$this->mostrarNaTela('Modules/Main/Template/index.html');
     }
     
     public function exibirTelaErro()

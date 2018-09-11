@@ -1,4 +1,6 @@
 <?php
+require_once 'Modules/Login/Model/Login.mdl.php';
+require_once 'Modules/Login/View/Login.vw.php';
 
 class LoginController extends Controller
 {
@@ -16,6 +18,7 @@ class LoginController extends Controller
 
     public function telaLogin()
     {
+
         $this->view->exibirTelaLogin();
     }
 
@@ -40,6 +43,7 @@ class LoginController extends Controller
     
     public function acaoPadrao()
     {
+
     	$this->telaLogin();
     }
 
