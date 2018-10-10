@@ -1,0 +1,18 @@
+
+.footer{
+	position: relative;
+	font-size:1rem;
+	text-align: right;
+	botton:0px;
+	color:#ffffff;
+	-webkit-text-stroke: 1px grey;
+	display:block;
+	@media (max-width: 600px) {
+		min-width:400px;	
+	}
+}
+@media (max-width: 600px) {
+    .footer{
+	    min-width:400px;
+    }
+}

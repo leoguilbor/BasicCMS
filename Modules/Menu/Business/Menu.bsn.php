@@ -1,0 +1,1 @@
+<?phpclass MenuBusiness extends Business{    private $model;    private $view;        public function __construct($view,$model)    {        $this->model = $model;        $this->view = $view;            }        public function getMenuItems($idMenu){                return  $this->model->getMenuItens($idMenu);    }}?>
