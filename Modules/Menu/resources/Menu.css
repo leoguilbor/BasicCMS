@@ -1,0 +1,14 @@
+.menu{
+	background-color: #dddddd;
+	border-radius: 0px 0px 10px 0px;
+	left: -15px;
+	max-width:50%;
+	min-width:px;
+	margin-left:10px;
+	background: rgba(255, 255, 255, 0.3);
+	font-size:1.0rem;
+	color: #dddddd;
+	-webkit-text-stroke:  0.5px #aaaaaa;	
+	position: absolute;
+	top:0px;	
+}

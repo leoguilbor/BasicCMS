@@ -1,0 +1,28 @@
+
+.header{
+	position: relative;
+	
+	font-family:fantasy; 
+	font-size:4rem;
+	text-align: right;
+	color:#ffffff;	
+	-webkit-text-stroke: 1px black;
+
+	background-image: url('img/logo.png');	
+	background-repeat:no-repeat;
+	background-size:100px 100px;
+	background-position:top center;
+
+	display:block;
+
+}
+
+@media (max-width: 600px) {
+    .header{
+	    padding-top:0rem;
+	    min-width:400px;
+	    background-position:center 30%;
+	    font-size: 1.5rem;
+	    min-height:3rem;
+    }
+}

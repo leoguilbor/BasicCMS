@@ -1,11 +1,25 @@
-<div class="row menu">
-	<div class="col bg-light">
-		Quem somos
+<nav class="navbar navbar-expand-lg	 navbar-light menu">
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	    <span class="navbar-toggler-icon"></span>
+	</button>
+	  
+  	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+	{if $display==0}
+		{foreach from=$menuItens item=item}
+			<div class="col-md-3 navbar">
+				<a href="{$item['link']}">{$item['name']}</a>
+			</div>	
+		{/foreach}
+	{else}
+	<li>
+		{foreach from=$menuItens item=item}
+		
+			<ul class="row-md-3 navbar">
+				<a href="{$item['link']}">{$item['name']}</a>
+			</ul>
+			
+		{/foreach}
+	</li>
+	{/if}
 	</div>
-	<div class="col bg-light">
-		Galeria
-	</div>
-	<div class="col bg-light">
-		Contato
-	</div>
-</div>
+</nav>

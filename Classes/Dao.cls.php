@@ -207,9 +207,6 @@ class Dao
         }
     }
     
-
-
-    
     public function create($model)
     {
         $sql ="insert into ". $this->getTableName() ." (".$this->getColumnsAsString()." ) values (".$this->getValues().");";
@@ -250,7 +247,8 @@ class Dao
         $array_fields = get_class_vars($this);
         
         foreach($array_fields as $field){     
-            $value = eval('$this->'.$field);
+            $value = $this->$field;
+            
             if (is_string($value)){
                 $value = "'$value'";                
             }
@@ -262,7 +260,7 @@ class Dao
         $sql .= " ) where ";
         $array_pk = $this->getPkFields();
         foreach($array_pk as $field){
-            $sql.= $array_fields ." = '".eval('$this->'.$field);
+            $sql.= $field ." = '".$this->$field."'";
             if (current($array_pk)!= false){
                 $sql.= " and ";
             }
@@ -271,8 +269,19 @@ class Dao
         return $this->query($sql);
     }
     
+    public function getById($id){
+        $response =    $this-> list("id =".$id);
+        
+        foreach($_COLUMNS as $column){
+            $this->$column = $response[$column];
+        }
+        
+        return $response;
+    }
+    
     public function list($criteria=null)
     {
+        
         $sql ="Select ". $this->getColumnsAsString() ." from ". $this->getTableName();
         if ($criteria != null)
         {
@@ -280,7 +289,7 @@ class Dao
             if (get_class($this) == (get_class($ids))){
                 
                 foreach($array_pk as $field){
-                    $sql.= $array_fields ." = '".eval('$this->'.$field);
+                    $sql.= $array_fields ." = '".$this->$field."'";
                     if (current($array_pk)!= false){
                         $sql.= " and ";
                     }
@@ -289,10 +298,11 @@ class Dao
                 $sql.=$criteria;
             }
         }
-
+//echo $sql."</br>";
+        
         return $this->query($sql);
     }
-    
+
 }
 
 ?>

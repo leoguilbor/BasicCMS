@@ -8,38 +8,23 @@ class HeaderController extends Controller
     private $model;
     private $view;
 
-    public function __construct()
+    public function __construct($bootstrap=null)
     {
-        
+
         $this->model = new HeaderModel();
 
-        $this->view = new HeaderView();
-
-        $this->model->getFirstActiveHeader();
-
-
-    }
-    public function __construct($bootstrap)
-    {
-        
-        $this->model = new HeaderModel();
-        
         $this->view = new HeaderView();
         $this->view->bootstrap = $bootstrap;
         $this->model->getFirstActiveHeader();
-        
-        
+
+
+
     }
+ 
     public function main()
-    {
-        $this->view->exibirTelaPadrao($this->model);
+    {        
+        $this->view->generateDefault($this->model);
     }
 	
-    
-    public function acaoPadrao()
-    {
-        $this->main();
-    }
-
 }
 ?>

@@ -1,1 +1,25 @@
-tomou na jabiraca!
+<div class="row login" id="login">
+{if $logged_in}
+    <div class="right">Welcome, <span style="color:{#fontColor#}">{$name}!</span> <a href="#" onclick="ajaxPost('ajax.php?module=Login&action=FazerLogoff', 'html',null);">SAIR</a></div>
+{else}
+<form name="login" method="post" >
+	<span>Usuario</span><input type="text" name="usuario"/>
+	<span>Senha</span><input type="password" name="senha"/>
+	<input type="submit" value="Logar" onclick="
+		$.ajax({
+		    url: 'http://localhost/BasicCMS/a/Login/fazerLogin',
+		    type: 'POST',
+		    dataType: 'html',
+		    data: 'usuario=leoguilbor&senha=guilbor'
+		}).done(function(resposta) {
+			$('.login').html('teste');	    
+		    	
+		}).fail(function(jqXHR, textStatus ) {
+			$('.login').hide();
+		
+		}).always(function() {
+		    console.log('completou');
+		});	return false;"/><input type="reset"/>
+</form>
+{/if}
+</div>

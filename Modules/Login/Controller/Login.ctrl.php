@@ -1,5 +1,6 @@
 <?php
 require_once 'Modules/Login/Model/Login.mdl.php';
+require_once 'Modules/Login/Business/Login.bsn.php';
 require_once 'Modules/Login/View/Login.vw.php';
 
 class LoginController extends Controller
@@ -7,58 +8,31 @@ class LoginController extends Controller
     
     private $model;
     private $view;
+    private $business;
 
     public function __construct()
     {
 
         $this->model = new LoginModel();
         $this->view = new LoginView();
+        
+        $this->business = new LoginBusiness($this->view,$this->model);
 
     }
 
-    public function telaLogin()
+    public function main()
     {
-
-        $this->view->exibirTelaLogin();
+        $this->view->generateDefault();   
     }
 
-    public function fazerLogin()
+    public function doLogin()
     {
-        if ($this->model->verificarSenhaUsuario($_POST['usuario'], $_POST['senha'])) {
-            $this->gravaSessao();
-            $this->log("usuario ".$_POST['usuario']." logou");
-            $this->view->exibirTelaLogado();
-        } else {
-            $this->log('usuario tentou logar mas nao conseguiu');
-            $this->view->exibirTelaErro();
-        }
+        return $this->business->login();
     }
 	
-    public function fazerLogoff()
+    public function doLogout()
     {
-        $this->apagaSessao();
-        $this->view->exibirTelaLogin();
-        
-    }
-    
-    public function acaoPadrao()
-    {
-
-    	$this->telaLogin();
-    }
-
-    private function gravaSessao()
-    {
-		$_SESSION["logged_in"]=true;
-		$_SESSION["logged_who"]=$_POST['usuario'];
-		echo "sessao gravada";	
-    }
-
-    private function apagaSessao()
-    {
-		unset($_SESSION["logged_in"]);
-		unset($_SESSION["logged_who"]);
-		echo "sessao liberada";
+        return $this->business->logout();   
     }
 }
 ?>

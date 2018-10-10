@@ -20,7 +20,9 @@ class ModuleModel extends Dao
 	 */
 	public $descricao;
 
-	
+	public function getById($id){
+	    return $this->list("id =".$id)[""];
+	}
 }
 	
 	

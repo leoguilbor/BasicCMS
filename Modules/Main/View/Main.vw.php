@@ -1,37 +1,16 @@
 <?php
+
 class MainView extends View
 {
-    public function exibirTelaPrincipal($modules)
+    public function showMainScreen($modules)
     {      
-		$this->atribuirValor('nome','Viviane Jordao');
-		$this->atribuirValor('titulo','Fotografia');
-		$this->atribuirValor('modules',self::$modules);
-    	$this->mostrarNaTela('Modules/Main/Template/index.html');
-    }
-    
-    public function exibirTelaErro()
-    {
-        $this->atribuirValor('nome','Leoguilbor');
-        $this->atribuirValor('titulo','Aplicacao teste');
-        $this->atribuirValor('erro', 'Login Invalido');
-        $this->mostrarNaTela('Module/Login/Template/erro.html');
-
-    }
-
-    public function exibirTelaLogado()
-    {
-
         
-        $this->atribuirValor('nome','Viviane Jordao');
-        $this->atribuirValor('titulo','Fotografia');
-        
-        if (isset($_SESSION["logged_in"]))
-        {
-            $this->atribuirValor('logged_in',$logged_in);
-            $this->atribuirValor('name',$logged_who);
-        }
-        
-        $this->mostrarNaTela('Modules/Login/Template/logado.html');
+        $this->setCss($modules["css"]);
+		$this->setJs($modules["js"]);
+		$this->setData(self::$modules);
+		
+		$this->assignValue('url', ConfigLoad::getConfig()->URL);
+    	$this->show('Modules/Main/Template/index.html');
     }
-	
+    	
 }

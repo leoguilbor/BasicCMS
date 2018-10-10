@@ -1,7 +1,11 @@
-<div class="row login">
-<form name="login" method="post" action="index.php?module=Login&action=fazerLogin">
-	<span>Usuario</span><input type="text" name="usuario"></input>
-	<span>Senha</span><input type="password" name="senha"></input>
-	<input type="submit" value="Logar"></input><input type="reset">
-</form>
+<div class="row login" id="login">
+{if $logged_in}
+    <div class="right">Welcome, <span style="color:{#fontColor#}">{$name}!</span> <a href="#" onclick="ajaxPost('{$url}a/Login/doLogout', null , auth);return false;">SAIR</a></div>
+{else}
+	<form name="login" method="post" >
+		<span>Usuario</span><input type="text" name="user"/>
+		<span>Senha</span><input type="password" name="password"/>
+		<input type="submit" value="Logar" onclick="ajaxPost('{$url}/a/Login/doLogin','user='+$('input[name=user]').val()+'&password='+$('input[name=password]').val(),auth);return false;"/><input type="reset"/>
+	</form>
+{/if}
 </div>

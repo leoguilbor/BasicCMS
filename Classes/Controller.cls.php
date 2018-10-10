@@ -1,6 +1,8 @@
 <?php
 class Controller
 {
+    public $parameters;
+    
 	public function redirect($url)
 	{
 		header('Location: ' . $url);
@@ -14,6 +16,17 @@ class Controller
 	public function log($mensagem)
 	{
 
+	}
+	
+	public function default($parameters=null)
+	{
+	    
+	    if ($parameters!=null){
+	        $this->parameters = json_decode($parameters);
+	    }
+
+	    $this->main();
+	    
 	}
 }
 ?>
